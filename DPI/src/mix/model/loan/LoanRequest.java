@@ -1,16 +1,19 @@
 package mix.model.loan;
 
+import java.io.Serializable;
+
 /**
  *
  * This class stores all information about a
  * request that a client submits to get a loan.
  *
  */
-public class LoanRequest {
+public class LoanRequest implements Serializable {
 
     private int ssn; // unique client number.
     private int amount; // the ammount to borrow
     private int time; // the time-span of the loan
+    private String messageId;
 
     public LoanRequest() {
         super();
@@ -53,5 +56,22 @@ public class LoanRequest {
     @Override
     public String toString() {
         return "ssn=" + String.valueOf(ssn) + " amount=" + String.valueOf(amount) + " time=" + String.valueOf(time);
+    }
+
+    public String getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null) return false;
+        LoanRequest other = (LoanRequest) obj;
+        if(other == null) return false;
+        if(!other.getMessageId().equals(this.getMessageId())) return false;
+        return true;
     }
 }

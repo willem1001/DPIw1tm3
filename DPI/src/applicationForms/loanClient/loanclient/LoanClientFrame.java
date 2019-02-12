@@ -6,6 +6,10 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.MessageListener;
+import javax.jms.ObjectMessage;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -15,11 +19,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-
+import applicationForms.SendReceive;
 import mix.messaging.requestreply.RequestReply;
 import mix.model.loan.*;
 
-public class LoanClientFrame extends JFrame {
+public class LoanClientFrame extends JFrame implements MessageListener {
 
 	/**
 	 * 
@@ -105,16 +109,16 @@ public class LoanClientFrame extends JFrame {
 		tfTime.setColumns(10);
 		
 		JButton btnQueue = new JButton("send loan request");
-		btnQueue.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				int ssn = Integer.parseInt(tfSSN.getText());
-				int amount = Integer.parseInt(tfAmount.getText());
-				int time = Integer.parseInt(tfTime.getText());				
-				
-				LoanRequest request = new LoanRequest(ssn,amount,time);
-				listModel.addElement( new RequestReply<LoanRequest,LoanReply>(request, null));	
-				// to do:  send the JMS with request to Loan Broker
-			}
+		btnQueue.addActionListener(arg0 -> {
+			int ssn = Integer.parseInt(tfSSN.getText());
+			int amount = Integer.parseInt(tfAmount.getText());
+			int time = Integer.parseInt(tfTime.getText());
+
+			LoanRequest request = new LoanRequest(ssn,amount,time);
+
+			String messageId = SendReceive.sendMessage(request, "ToBroker");
+			request.setMessageId(messageId);
+			listModel.addElement(new RequestReply<>(request, null));
 		});
 		GridBagConstraints gbc_btnQueue = new GridBagConstraints();
 		gbc_btnQueue.insets = new Insets(0, 0, 5, 5);
@@ -132,9 +136,10 @@ public class LoanClientFrame extends JFrame {
 		contentPane.add(scrollPane, gbc_scrollPane);
 		
 		requestReplyList = new JList<RequestReply<LoanRequest,LoanReply>>(listModel);
-		scrollPane.setViewportView(requestReplyList);	
-       
+		scrollPane.setViewportView(requestReplyList);
+		SendReceive.receive("ToClient", this);
 	}
+
 	
 	/**
 	 * This method returns the RequestReply line that belongs to the request from requestReplyList (JList). 
@@ -146,14 +151,21 @@ public class LoanClientFrame extends JFrame {
      
      for (int i = 0; i < listModel.getSize(); i++){
     	 RequestReply<LoanRequest,LoanReply> rr =listModel.get(i);
-    	 if (rr.getRequest() == request){
+    	 if (rr.getRequest().equals(request)){
     		 return rr;
     	 }
      }
-     
      return null;
    }
-	
+
+	private void add(LoanReply reply, LoanRequest request) {
+		RequestReply<LoanRequest, LoanReply> rr = getRequestReply(request);
+		if (rr != null && reply != null) {
+			rr.setReply(reply);
+			requestReplyList.repaint();
+		}
+	}
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -166,5 +178,16 @@ public class LoanClientFrame extends JFrame {
 				}
 			}
 		});
+	}
+
+	@Override
+	public void onMessage(Message message) {
+		ObjectMessage objectMessage = (ObjectMessage) message;
+		try {
+			RequestReply<LoanRequest, LoanReply> reply = (RequestReply<LoanRequest, LoanReply>) objectMessage.getObject();
+			add(reply.getReply(), reply.getRequest());
+		} catch (JMSException e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -1,14 +1,17 @@
 package mix.model.bank;
 
+import java.io.Serializable;
+
 /**
  *
  * This class stores all information about an request from a bank to offer
  * a loan to a specific client.
  */
-public class BankInterestRequest {
+public class BankInterestRequest implements Serializable {
 
     private int amount; // the requested loan amount
     private int time; // the requested loan period
+    private String messageId;
 
     public BankInterestRequest() {
         super();
@@ -42,5 +45,13 @@ public class BankInterestRequest {
     @Override
     public String toString() {
         return " amount=" + amount + " time=" + time;
+    }
+
+    public String getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
     }
 }

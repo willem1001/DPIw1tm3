@@ -8,6 +8,36 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/applicationForms/JListLine.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/applicationForms/MyMessageListner.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/applicationForms/Queue.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/applicationForms/QueueName.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/applicationForms/SendReceive.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/applicationForms/SendRecieve.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/applicationForms/abnAmro/bank/JMSBankFrame.java">
           <value>
             <set />

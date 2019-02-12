@@ -20,15 +20,15 @@ class JListLine {
 	private BankInterestRequest bankRequest;
 	private BankInterestReply bankReply;
 
-	public JListLine(LoanRequest loanRequest) {
+	JListLine(LoanRequest loanRequest) {
 		this.setLoanRequest(loanRequest);
 	}
 
-	public LoanRequest getLoanRequest() {
+	LoanRequest getLoanRequest() {
 		return loanRequest;
 	}
 
-	public void setLoanRequest(LoanRequest loanRequest) {
+	void setLoanRequest(LoanRequest loanRequest) {
 		this.loanRequest = loanRequest;
 	}
 
@@ -36,7 +36,7 @@ class JListLine {
 		return bankRequest;
 	}
 
-	public void setBankRequest(BankInterestRequest bankRequest) {
+	void setBankRequest(BankInterestRequest bankRequest) {
 		this.bankRequest = bankRequest;
 	}
 
@@ -44,7 +44,7 @@ class JListLine {
 		return bankReply;
 	}
 
-	public void setBankReply(BankInterestReply bankReply) {
+	void setBankReply(BankInterestReply bankReply) {
 		this.bankReply = bankReply;
 	}
 

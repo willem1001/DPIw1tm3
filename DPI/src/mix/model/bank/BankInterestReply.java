@@ -1,14 +1,17 @@
 package mix.model.bank;
 
+import java.io.Serializable;
+
 /**
  * This class stores information about the bank reply
  *  to a loan request of the specific client
  * 
  */
-public class BankInterestReply {
+public class BankInterestReply implements Serializable {
 
     private double interest; // the loan interest
-    private String bankId; // the nunique quote Id
+    private String bankId; // the unique quote Id
+    private String correlationId;
     
     public BankInterestReply() {
         this.interest = 0;
@@ -38,5 +41,13 @@ public class BankInterestReply {
 
     public String toString() {
         return "quote=" + this.bankId + " interest=" + this.interest;
+    }
+
+    public String getCorrelationId() {
+        return correlationId;
+    }
+
+    public void setCorrelationId(String correlationId) {
+        this.correlationId = correlationId;
     }
 }

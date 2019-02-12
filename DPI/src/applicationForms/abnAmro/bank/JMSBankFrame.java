@@ -6,6 +6,10 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.MessageListener;
+import javax.jms.ObjectMessage;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -15,12 +19,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
+import applicationForms.SendReceive;
 import mix.model.bank.BankInterestReply;
 import mix.model.bank.BankInterestRequest;
 
 import mix.messaging.requestreply.RequestReply;
 
-public class JMSBankFrame extends JFrame {
+public class JMSBankFrame extends JFrame implements MessageListener {
 
 	/**
 	 * 
@@ -50,6 +56,7 @@ public class JMSBankFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public JMSBankFrame() {
+		SendReceive.receive("ToBank", this);
 		setTitle("JMS Bank - ABN AMRO");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -100,9 +107,10 @@ public class JMSBankFrame extends JFrame {
 				double interest = Double.parseDouble((tfReply.getText()));
 				BankInterestReply reply = new BankInterestReply(interest,"ABN AMRO");
 				if (rr!= null && reply != null){
+					reply.setCorrelationId(rr.getRequest().getMessageId());
 					rr.setReply(reply);
 	                list.repaint();
-					// todo: sent JMS message with the reply to Loan Broker
+					SendReceive.sendMessage(reply, "ToBroker");
 				}
 			}
 		});
@@ -113,4 +121,14 @@ public class JMSBankFrame extends JFrame {
 		contentPane.add(btnSendReply, gbc_btnSendReply);
 	}
 
+	@Override
+	public void onMessage(Message message) {
+		ObjectMessage objectMessage = (ObjectMessage) message;
+		try {
+			BankInterestRequest bankInterestRequest = (BankInterestRequest) objectMessage.getObject();
+			listModel.addElement(new RequestReply<>(bankInterestRequest, null));
+		} catch (JMSException e) {
+			e.printStackTrace();
+		}
+	}
 }
