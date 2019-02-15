@@ -3,13 +3,6 @@ import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageListener;
-import javax.jms.ObjectMessage;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -19,11 +12,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-import applicationForms.SendReceive;
+import applicationForms.Gateways.LoanBrokerAppGatewayClient;
 import mix.messaging.requestreply.RequestReply;
 import mix.model.loan.*;
 
-public class LoanClientFrame extends JFrame implements MessageListener {
+public class LoanClientFrame extends JFrame {
 
 	/**
 	 * 
@@ -33,16 +26,24 @@ public class LoanClientFrame extends JFrame implements MessageListener {
 	private JTextField tfSSN;
 	private DefaultListModel<RequestReply<LoanRequest,LoanReply>> listModel = new DefaultListModel<RequestReply<LoanRequest,LoanReply>>();
 	private JList<RequestReply<LoanRequest,LoanReply>> requestReplyList;
-
 	private JTextField tfAmount;
 	private JLabel lblNewLabel;
 	private JLabel lblNewLabel_1;
 	private JTextField tfTime;
+	private LoanBrokerAppGatewayClient loanBrokerAppGateway;
 
 	/**
 	 * Create the frame.
 	 */
 	public LoanClientFrame() {
+
+		loanBrokerAppGateway = new LoanBrokerAppGatewayClient() {
+			@Override
+			public void onLoanReplyArrived(LoanReply loanReply) {
+				addReply(loanReply);
+			}
+		};
+
 		setTitle("Loan Client");
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -115,8 +116,7 @@ public class LoanClientFrame extends JFrame implements MessageListener {
 			int time = Integer.parseInt(tfTime.getText());
 
 			LoanRequest request = new LoanRequest(ssn,amount,time);
-
-			String messageId = SendReceive.sendMessage(request, "ToBroker");
+			String messageId = loanBrokerAppGateway.applyForLoan(request);
 			request.setMessageId(messageId);
 			listModel.addElement(new RequestReply<>(request, null));
 		});
@@ -137,7 +137,6 @@ public class LoanClientFrame extends JFrame implements MessageListener {
 		
 		requestReplyList = new JList<RequestReply<LoanRequest,LoanReply>>(listModel);
 		scrollPane.setViewportView(requestReplyList);
-		SendReceive.receive("ToClient", this);
 	}
 
 	
@@ -157,6 +156,15 @@ public class LoanClientFrame extends JFrame implements MessageListener {
      }
      return null;
    }
+
+	private void addReply(LoanReply loanReply) {
+		for (int i = 0; i < listModel.size(); i++) {
+			RequestReply<LoanRequest, LoanReply> rr = listModel.getElementAt(i);
+			if(rr.getRequest().getMessageId().equals(loanReply.getMessageId())) {
+				add(loanReply, rr.getRequest());
+			}
+		}
+	}
 
 	private void add(LoanReply reply, LoanRequest request) {
 		RequestReply<LoanRequest, LoanReply> rr = getRequestReply(request);
@@ -178,16 +186,5 @@ public class LoanClientFrame extends JFrame implements MessageListener {
 				}
 			}
 		});
-	}
-
-	@Override
-	public void onMessage(Message message) {
-		ObjectMessage objectMessage = (ObjectMessage) message;
-		try {
-			RequestReply<LoanRequest, LoanReply> reply = (RequestReply<LoanRequest, LoanReply>) objectMessage.getObject();
-			add(reply.getReply(), reply.getRequest());
-		} catch (JMSException e) {
-			e.printStackTrace();
-		}
 	}
 }

@@ -11,7 +11,7 @@ public class LoanReply implements Serializable {
 
         private double interest; // the interest that the bank offers
         private String bankID; // the unique quote identification
-        private String correlationId;
+        private String messageId;
 
     public LoanReply() {
         super();
@@ -45,11 +45,11 @@ public class LoanReply implements Serializable {
         return " interest="+String.valueOf(interest) + " quoteID="+String.valueOf(bankID);
     }
 
-    public String getCorrelationId() {
-        return correlationId;
+    public String getMessageId() {
+        return messageId;
     }
 
-    public void setCorrelationId(String messageId) {
-        this.correlationId = messageId;
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
     }
 }

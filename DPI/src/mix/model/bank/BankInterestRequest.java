@@ -19,10 +19,11 @@ public class BankInterestRequest implements Serializable {
         this.time = 0;
     }
 
-    public BankInterestRequest(int amount, int time) {
+    public BankInterestRequest(int amount, int time, String messageId) {
         super();
         this.amount = amount;
         this.time = time;
+        this.messageId = messageId;
     }
 
     public int getAmount() {

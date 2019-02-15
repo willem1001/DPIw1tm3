@@ -5,11 +5,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageListener;
-import javax.jms.ObjectMessage;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -19,14 +14,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-
-import applicationForms.SendReceive;
+import applicationForms.Gateways.LoanBrokerAppGatewayBank;
 import mix.model.bank.BankInterestReply;
 import mix.model.bank.BankInterestRequest;
 
 import mix.messaging.requestreply.RequestReply;
 
-public class JMSBankFrame extends JFrame implements MessageListener {
+public class JMSBankFrame extends JFrame {
 
 	/**
 	 * 
@@ -35,6 +29,7 @@ public class JMSBankFrame extends JFrame implements MessageListener {
 	private JPanel contentPane;
 	private JTextField tfReply;
 	private DefaultListModel<RequestReply<BankInterestRequest, BankInterestReply>> listModel = new DefaultListModel<RequestReply<BankInterestRequest, BankInterestReply>>();
+	private LoanBrokerAppGatewayBank loanBrokerAppGateway;
 	
 	/**
 	 * Launch the application.
@@ -56,7 +51,14 @@ public class JMSBankFrame extends JFrame implements MessageListener {
 	 * Create the frame.
 	 */
 	public JMSBankFrame() {
-		SendReceive.receive("ToBank", this);
+
+		loanBrokerAppGateway = new LoanBrokerAppGatewayBank() {
+			@Override
+			public void onBankRequestArrived(BankInterestRequest request) {
+				listModel.addElement(new RequestReply<>(request, null));
+			}
+		};
+
 		setTitle("JMS Bank - ABN AMRO");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -107,10 +109,10 @@ public class JMSBankFrame extends JFrame implements MessageListener {
 				double interest = Double.parseDouble((tfReply.getText()));
 				BankInterestReply reply = new BankInterestReply(interest,"ABN AMRO");
 				if (rr!= null && reply != null){
-					reply.setCorrelationId(rr.getRequest().getMessageId());
+					reply.setMessageId(rr.getRequest().getMessageId());
 					rr.setReply(reply);
 	                list.repaint();
-					SendReceive.sendMessage(reply, "ToBroker");
+					loanBrokerAppGateway.replyBankInterest(reply);
 				}
 			}
 		});
@@ -119,16 +121,5 @@ public class JMSBankFrame extends JFrame implements MessageListener {
 		gbc_btnSendReply.gridx = 4;
 		gbc_btnSendReply.gridy = 1;
 		contentPane.add(btnSendReply, gbc_btnSendReply);
-	}
-
-	@Override
-	public void onMessage(Message message) {
-		ObjectMessage objectMessage = (ObjectMessage) message;
-		try {
-			BankInterestRequest bankInterestRequest = (BankInterestRequest) objectMessage.getObject();
-			listModel.addElement(new RequestReply<>(bankInterestRequest, null));
-		} catch (JMSException e) {
-			e.printStackTrace();
-		}
 	}
 }

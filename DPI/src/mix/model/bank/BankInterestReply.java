@@ -11,7 +11,7 @@ public class BankInterestReply implements Serializable {
 
     private double interest; // the loan interest
     private String bankId; // the unique quote Id
-    private String correlationId;
+    private String messageId;
     
     public BankInterestReply() {
         this.interest = 0;
@@ -43,11 +43,11 @@ public class BankInterestReply implements Serializable {
         return "quote=" + this.bankId + " interest=" + this.interest;
     }
 
-    public String getCorrelationId() {
-        return correlationId;
+    public String getMessageId() {
+        return messageId;
     }
 
-    public void setCorrelationId(String correlationId) {
-        this.correlationId = correlationId;
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
     }
 }
