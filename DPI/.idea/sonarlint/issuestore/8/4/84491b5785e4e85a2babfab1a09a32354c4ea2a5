@@ -1,0 +1,14 @@
+
+Fsquid:S1604Z"(Make this anonymous inner class a lambda(à¦Å÷8ŒÛøÖ-
+usquid:S001174"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ıœçÈûÿÿÿÿ8ŒÛøÖ-
+usquid:S00117H"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¡Ñöùÿÿÿÿ8ŒÛøÖ-
+[squid:UselessImportCheck"0Remove this unused import 'java.awt.EventQueue'.(ùÅØæ8É¡ùÖ-
+qsquid:MaximumInheritanceDepth"<This class has 6 parents which is greater than 5 authorized.(Œù¼—üÿÿÿÿ8ŒÛøÖ-
+psquid:S00117P"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ÿšğ¯8ŒÛøÖ-
+|squid:S2293D"YReplace the type specification in this constructor call with the diamond operator ("<>").(çˆÕãıÿÿÿÿ8ŒÛøÖ-
+usquid:S00117<"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(°«Ûëÿÿÿÿÿ8ŒÛøÖ-
+rsquid:S00120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(ÚĞÂğ
+Zsquid:S2589_"7Remove this expression which always evaluates to "true"(¹øÕêûÿÿÿÿ8ŒÛøÖ-
+usquid:S00117g"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(“ñ…Ôüÿÿÿÿ8ŒÛøÖ-
+|squid:S2293"YReplace the type specification in this constructor call with the diamond operator ("<>").(ˆˆ‚êøÿÿÿÿ8ŒÛøÖ-
+Tsquid:S1948 "6Make "loanBrokerAppGateway" transient or serializable.(Ë ß8ŒÛøÖ-

@@ -1,0 +1,8 @@
+
+gsquid:S1206F"PThis class overrides "equals()" and should therefore also override "hashCode()".(ÜÑã
+]squid:S1126J"AReplace this if-then-else statement by a single return statement.( ö¸–øÿÿÿÿ
+Hsquid:S1153:"1Directly append the argument of String.valueOf().(Â„Õ¸
+Hsquid:S1153:"1Directly append the argument of String.valueOf().(Â„Õ¸
+6squid:S2097F"Add a type test to this method.(ÜÑã
+[squid:S2583I"DChange this condition so that it does not always evaluate to "false"(Û¹µã
+Hsquid:S1153:"1Directly append the argument of String.valueOf().(Â„Õ¸

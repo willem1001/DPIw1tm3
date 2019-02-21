@@ -7,15 +7,14 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.TextMessage;
 
-public class BankAppGateway {
+public abstract class BankAppGateway {
 
     private MessageSenderGateway sender;
     private MessageReceiverGateway reciever;
 
     public BankAppGateway() {
-        sender = new MessageSenderGateway("ToBank");
         reciever = new MessageReceiverGateway("ToBrokerFromBank");
-        reciever.setListner(message -> {
+        reciever.setListener(message -> {
             TextMessage m = (TextMessage) message;
             try {
                 BankInterestReply bankInterestReply = BankSerializer.replyFromString(m.getText());
@@ -26,12 +25,11 @@ public class BankAppGateway {
         });
     }
 
-    public void requestBankInterest(BankInterestRequest bankInterestRequest) {
+    public void requestBankInterest(BankInterestRequest bankInterestRequest, String queueName) {
+        sender = new MessageSenderGateway(queueName);
         Message message = sender.createMessage(BankSerializer.requestToString(bankInterestRequest));
         sender.send(message);
     }
 
-    public void onBankReplyArrived(BankInterestReply bankInterestReply) {
-
-    }
+    public abstract void onBankReplyArrived(BankInterestReply bankInterestReply);
 }

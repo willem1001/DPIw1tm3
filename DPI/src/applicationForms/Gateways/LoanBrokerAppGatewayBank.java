@@ -8,14 +8,14 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.TextMessage;
 
-public class LoanBrokerAppGatewayBank {
+public abstract class LoanBrokerAppGatewayBank {
     private MessageSenderGateway bankSender;
     private MessageReceiverGateway bankReciever;
 
-    public LoanBrokerAppGatewayBank () {
+    public LoanBrokerAppGatewayBank (String queueName) {
     bankSender = new MessageSenderGateway("ToBrokerFromBank");
-    bankReciever = new MessageReceiverGateway("ToBank");
-      bankReciever.setListner(message -> {
+    bankReciever = new MessageReceiverGateway(queueName);
+      bankReciever.setListener(message -> {
           TextMessage m = (TextMessage) message;
           try {
               BankInterestRequest request = BankSerializer.requestFromString(m.getText());
@@ -31,5 +31,5 @@ public class LoanBrokerAppGatewayBank {
         bankSender.send(message);
     }
 
-    public void onBankRequestArrived(BankInterestRequest request) {}
+    public abstract void onBankRequestArrived(BankInterestRequest request);
 }

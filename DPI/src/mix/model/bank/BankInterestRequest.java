@@ -12,6 +12,7 @@ public class BankInterestRequest implements Serializable {
     private int amount; // the requested loan amount
     private int time; // the requested loan period
     private String messageId;
+    private String aggregationId;
 
     public BankInterestRequest() {
         super();
@@ -54,5 +55,13 @@ public class BankInterestRequest implements Serializable {
 
     public void setMessageId(String messageId) {
         this.messageId = messageId;
+    }
+
+    public String getAggregationId() {
+        return aggregationId;
+    }
+
+    public void setAggregationId(String aggregationId) {
+        this.aggregationId = aggregationId;
     }
 }

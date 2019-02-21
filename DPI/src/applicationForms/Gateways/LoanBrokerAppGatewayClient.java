@@ -8,7 +8,7 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.TextMessage;
 
-public class LoanBrokerAppGatewayClient {
+public abstract class LoanBrokerAppGatewayClient {
 
     private MessageSenderGateway loanSender;
     private MessageReceiverGateway loanReceiver;
@@ -16,9 +16,10 @@ public class LoanBrokerAppGatewayClient {
     public LoanBrokerAppGatewayClient() {
         loanSender = new MessageSenderGateway("ToBrokerFromClient");
         loanReceiver = new MessageReceiverGateway("ToClient");
-        loanReceiver.setListner(message -> {
+        loanReceiver.setListener(message -> {
             TextMessage m = (TextMessage) message;
             try {
+
                 LoanReply reply = LoanSerializer.replyFromString(m.getText());
                 onLoanReplyArrived(reply);
             } catch (JMSException e) {
@@ -32,5 +33,5 @@ public class LoanBrokerAppGatewayClient {
         return loanSender.send(message);
     }
 
-    public void onLoanReplyArrived(LoanReply loanReply) {}
+    public abstract void onLoanReplyArrived(LoanReply loanReply);
 }

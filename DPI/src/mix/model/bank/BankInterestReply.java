@@ -12,6 +12,7 @@ public class BankInterestReply implements Serializable {
     private double interest; // the loan interest
     private String bankId; // the unique quote Id
     private String messageId;
+    private String aggregationId;
     
     public BankInterestReply() {
         this.interest = 0;
@@ -49,5 +50,13 @@ public class BankInterestReply implements Serializable {
 
     public void setMessageId(String messageId) {
         this.messageId = messageId;
+    }
+
+    public String getAggregationId() {
+        return aggregationId;
+    }
+
+    public void setAggregationId(String aggregationId) {
+        this.aggregationId = aggregationId;
     }
 }

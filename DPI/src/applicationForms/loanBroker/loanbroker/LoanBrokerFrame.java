@@ -4,12 +4,14 @@ import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
+
 import applicationForms.Gateways.BankAppGateway;
 import applicationForms.Gateways.LoanClientAppGateway;
 import mix.model.bank.*;
@@ -28,6 +30,7 @@ public class LoanBrokerFrame extends JFrame {
     private JList<JListLine> list;
     private LoanClientAppGateway loanClientAppGateway;
     private BankAppGateway bankAppGateway;
+    private ArrayList<Awaiting> awaiting = new ArrayList<>();
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
@@ -52,19 +55,41 @@ public class LoanBrokerFrame extends JFrame {
             @Override
             public void onLoanRequestArrived(LoanRequest loanRequest) {
                 add(loanRequest);
-                bankAppGateway.requestBankInterest(new BankInterestRequest(loanRequest.getAmount(), loanRequest.getTime(), loanRequest.getMessageId()));
+                ArrayList<String> avaliableBanks = CalculateBanks.calculateBanks(loanRequest);
+
+                awaiting.add(new Awaiting(loanRequest.getMessageId(), avaliableBanks.size()));
+
+                for (String bankQueue : avaliableBanks
+                ) {
+                    bankAppGateway.requestBankInterest(new BankInterestRequest(loanRequest.getAmount(), loanRequest.getTime(), loanRequest.getMessageId()), bankQueue);
+                }
             }
         };
 
         bankAppGateway = new BankAppGateway() {
             @Override
             public void onBankReplyArrived(BankInterestReply bankInterestReply) {
-                LoanRequest loanRequest = getRequestReplyByMessageId(bankInterestReply.getMessageId()).getLoanRequest();
-                add(loanRequest, bankInterestReply);
-                LoanReply loanReply = new LoanReply();
-                loanReply.setInterest(bankInterestReply.getInterest());
-                loanReply.setMessageId(bankInterestReply.getMessageId());
-                loanClientAppGateway.sendLoanReply(loanReply);
+
+                String messageId = bankInterestReply.getMessageId();
+
+                for (Awaiting a: awaiting
+                     ) {
+                    if(a.getMessageId().equals(messageId)){
+                        a.received(bankInterestReply);
+                        if(a.getAwaitingCount() <= 0) {
+                            BankInterestReply cheapest = a.getCheapest();
+                            LoanRequest loanRequest = getRequestReplyByMessageId(messageId).getLoanRequest();
+                            add(loanRequest, cheapest);
+                            LoanReply loanReply = new LoanReply();
+                            loanReply.setInterest(cheapest.getInterest());
+                            loanReply.setQuoteID(cheapest.getQuoteId());
+                            loanReply.setMessageId(messageId);
+                            loanClientAppGateway.sendLoanReply(loanReply);
+                            awaiting.remove(a);
+                            return;
+                        }
+                    }
+                }
             }
         };
 

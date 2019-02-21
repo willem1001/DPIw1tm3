@@ -35,7 +35,7 @@ public class MessageReceiverGateway {
         }
     }
 
-    public void setListner(MessageListener listener) {
+    public void setListener(MessageListener listener) {
         try {
             if (consumer != null) {
                 consumer.setMessageListener(listener);

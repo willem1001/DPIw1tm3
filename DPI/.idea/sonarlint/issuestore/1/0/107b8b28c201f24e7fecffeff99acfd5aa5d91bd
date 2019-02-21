@@ -1,0 +1,22 @@
+
+esquid:MaximumInheritanceDepth"<This class has 6 parents which is greater than 5 authorized.(üéÚÒ
+^squid:UselessImportCheck".Remove this unused import 'javax.swing.JList'.(ù›ÂÃüÿÿÿÿ8Çü×-
+squid:UselessImportCheck"ORemove this unused import 'applicationForms.Gateways.LoanBrokerAppGatewayBank'.(¡…×²ýÿÿÿÿ8ÑÖ“×-
+Zsquid:UselessImportCheck"/Remove this unused import 'javax.swing.JLabel'.(ý—àÓ8Çü×-
+esquid:UselessImportCheck":Remove this unused import 'java.awt.event.ActionListener'.(Ìä¹8Çü×-
+hsquid:UselessImportCheck"8Remove this unused import 'java.awt.GridBagConstraints'.(ýÆâ£øÿÿÿÿ8Çü×-
+hsquid:UselessImportCheck"=Remove this unused import 'mix.model.bank.BankInterestReply'.(·”–‚8ÑÖ“×-
+Zsquid:UselessImportCheck"/Remove this unused import 'javax.swing.JPanel'.(ò‚•8ÑÖ“×-
+^squid:UselessImportCheck"3Remove this unused import 'javax.swing.JTextField'.(ÝË—8ÑÖ“×-
+jsquid:UselessImportCheck"?Remove this unused import 'mix.model.bank.BankInterestRequest'.(øŽƒÜ8ÑÖ“×-
+\squid:UselessImportCheck",Remove this unused import 'java.awt.Insets'.(šôÇ³ûÿÿÿÿ8Çü×-
+tsquid:UselessImportCheck"DRemove this unused import 'mix.messaging.requestreply.RequestReply'.(›Œ…ôþÿÿÿÿ8ÑÖ“×-
+Fsquid:S1148("#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8Û«—×-
+[squid:UselessImportCheck	"0Remove this unused import 'javax.swing.JButton'.(´ÀÃ“8Çü×-
+bsquid:UselessImportCheck"7Remove this unused import 'java.awt.event.ActionEvent'.(Úù“‘8Çü×-
+_squid:UselessImportCheck"4Remove this unused import 'javax.swing.JScrollPane'.(Ê¹“ý8Çü×-
+dsquid:UselessImportCheck"9Remove this unused import 'javax.swing.DefaultListModel'.(ÿ¥œ«8ÑÖ“×-
+Ksquid:S1604""(Make this anonymous inner class a lambda(¤©Òâüÿÿÿÿ8Û«—×-
+rsquid:S00120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(ÚÐÂð
+csquid:UselessImportCheck"3Remove this unused import 'java.awt.GridBagLayout'.(ßŒÛúùÿÿÿÿ8Çü×-
+ksquid:UselessImportCheck";Remove this unused import 'javax.swing.border.EmptyBorder'.(ÿÍ“ûÿÿÿÿ8Çü×-
